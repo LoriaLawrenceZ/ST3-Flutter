@@ -26,12 +26,12 @@ class Calculadora extends StatefulWidget {
 class _CalculadoraState extends State<Calculadora> {
   TextEditingController _chute = TextEditingController();
   String _resposta = '';
-  Random numeroRandom = Random(100);
+  int numeroRandom = Random().nextInt(100);
 
   void _verificar() {
-    if (int.parse(_chute.toString()) == int.parse(numeroRandom as String)) {
+    if (int.tryParse(_chute.toString()) == numeroRandom) {
       _resposta = "Acertou!";
-    } else if (int.parse(_chute.toString()) < int.parse(numeroRandom as String)) {
+    } else if (int.tryParse(_chute.toString())! < numeroRandom) {
       _resposta = "É menor";
     } else {
       _resposta = "É maior!";
