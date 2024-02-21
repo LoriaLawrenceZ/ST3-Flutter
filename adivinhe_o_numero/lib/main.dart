@@ -24,23 +24,43 @@ class Calculadora extends StatefulWidget {
 }
 
 class _CalculadoraState extends State<Calculadora> {
-  TextEditingController _chute = TextEditingController();
-  String _resposta = '';
-  int numeroRandom = Random().nextInt(100);
+  TextEditingController _controllerNumero1 = TextEditingController();
+  TextEditingController _controllerNumero2 = TextEditingController();
+  String _resultado = '';
 
-  void _verificar() {
-    if (int.tryParse(_chute.toString()) == numeroRandom) {
-      _resposta = "Acertou!";
-    } else if (int.tryParse(_chute.toString())! < numeroRandom) {
-      _resposta = "É menor";
-    } else {
-      _resposta = "É maior!";
-    }
+  void _calcular(String operacao) {
+    double numero1 = double.tryParse(_controllerNumero1.text) ?? 0.0;
+    double numero2 = double.tryParse(_controllerNumero2.text) ?? 0.0;
+    double resultado;
+
+    setState(() {
+      switch (operacao) {
+        case 'Somar':
+          resultado = numero1 + numero2;
+          break;
+        case 'Subtrair':
+          resultado = numero1 - numero2;
+          break;
+        case 'Multiplicar':
+          resultado = numero1 * numero2;
+          break;
+        case 'Dividir':
+          resultado = (numero2 != 0 ? numero1 / numero2 : null)!;
+          break;
+        case 'Potencia':
+          resultado = pow(numero1, numero2) as double;
+          break;
+        default:
+          resultado = 0.0;
+      }
+
+      _resultado =
+          resultado != null ? 'Resultado: $resultado' : 'Erro na operação';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    String chute;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculadora Flutter'),
@@ -52,24 +72,50 @@ class _CalculadoraState extends State<Calculadora> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
-              controller: _chute,
+              controller: _controllerNumero1,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Chute um número'),
+              decoration: const InputDecoration(labelText: 'Número 1'),
+            ),
+            const SizedBox(
+              height: 16.0,
+              width: 100.0,
+            ),
+            TextField(
+              controller: _controllerNumero2,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Número 2'),
             ),
             const SizedBox(
               height: 16.0,
               width: 50.0,
             ),
             ElevatedButton(
-              onPressed: () => _verificar(),
-              child: Text('Chutar'),
+              onPressed: () => _calcular('Somar'),
+              child: Text('Somar'),
             ),
+            FilledButton(
+                onPressed: () => _calcular("Subtrair"),
+                child: Text("Subtrair")),
+            CupertinoButton(
+                onPressed: () => _calcular("Multiplicar"),
+                child: Text("Multiplicar")),
+            FilledButton(
+                onPressed: () => _calcular("Dividir"),
+                child: const Text("Dividir")),
+            const SizedBox(height: 16.0),
             Text(
-              _resposta,
+              _resultado,
               style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            const Text(
+              "Foda em irmão",
+              style: TextStyle(
+                  color: Color.fromARGB(189, 255, 0, 0),
+                  backgroundColor: Color.fromARGB(255, 0, 0, 0)),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
